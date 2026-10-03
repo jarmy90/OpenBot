@@ -44,16 +44,36 @@ Opciones (elegida A):
 | Inputs EA | `.set` baseline (Target 2.0, resto stock) |
 | Ejecución | `terminal64.exe` + `LADDER_v8_USTEC_baseline_tester.ini`, o manual en Strategy Tester |
 
-## 4. Estado del backtest
+## 4. RESULTADOS backtest 2025-10-01 → 2026-10-01 (ejecutado 2026-10-03)
 
-**NO ejecutado**: el terminal en uso es la sesión live del usuario; lanzar el Tester headless contra el mismo
-`data_path` la secuestraría. Queda el `.ini` listo para ejecución desatendida o manual (5–15 min aprox. en real ticks).
-Para lanzar: cerrar/confirmar con el usuario, compilar ya hecho, correr ini, recoger `Report` + journal
-(`TP_NECESARIO_EXCESIVO` debe ser 0; si aparece, revisar).
+Config real: M1, Every tick based on real ticks, **100% ticks reales** (134.3M ticks USTEC),
+10000 EUR, 1:30, hedging. Duración test: 6:55 min. Report: `docs/LADDER_v8_USTEC_baseline_1Y_report.htm`.
+
+| Métrica | Valor |
+|---|---|
+| Posiciones (L1/L2/L3/L4) | 106 (35/31/25/15) |
+| Beneficio neto | **−18.76 EUR** (balance 9981.24) |
+| Profit Factor (bruto +94.55 / −113.31) | **0.83** |
+| Max DD balance / equity | 27.17 / 27.48 (0.27%) |
+| Winrate posiciones | 33/106 = **31.13%** (long 31.75%, short 30.23%) |
+| Sharpe / LR Correlation / Z-Score | −5.00 / −0.51 / −1.58 |
+| Max racha ganadora / perdedora | 5 (+7.16) / 10 (−17.44) |
+| Ciclos: OBJETIVO / MAX_NIVEL / HARD_END | 20 / 13 / 2 → **winrate por ciclo 57%** |
+| Días con sesgo: SIN OPERAR / COMPRAS / VENTAS | 222 / 20 / 16 (de 258, **86% sin operar**) |
+| Días con entradas | 35 |
+| `TP_NECESARIO_EXCESIVO` / `TOPE_RIESGO` / filtro spread | 1 / 0 / 0 |
+
+Lectura crítica: el filtro de sesgo deja fuera el 86% de los días (LON_RANGE + VWAP es muy exigente);
+cuando entra, la escalera hunde el 43% de los ciclos hasta MAX_NIVEL y el+HARD_END confirma
+que 2 ciclos murieron por cierre de seguridad. PF 0.83 + Sharpe −5 con solo 35 ciclos/año:
+muestra pequeña, expectancy −0.18 EUR/operación. No apto para live. Vías: relajar sesgo
+(LON_MID/OPEN), reevaluar Target 2.0 vs SL 8.0 (RR ~1:2.7 en L1 pero la escalera lo invierte),
+o diario de festivos (Thanksgiving/Navidad/Año Nuevo caen en SIN OPERAR o fuera de ventana: verificar).
 
 ## 5. Checklist datos
 
 - [x] Historial M1 disponible desde ≥2023-09 (verificado vía `copy_rates`, 500k barras desde 2024-10-01)
+- [x] Ticks reales 2025-07-01→2026-09-30 cubren el rango (calidad 100% según report)
 - [ ] Descargar ticks reales del rango en Tester (automático al correr Model=4; verificar pestaña Journal sin gaps)
 - [ ] Festivos: USTEC cierra Acción de Gracias 27-11, Navidad 25-12, 01-01 — el EA no filtra festivos; cruzar días sin operar con calendario
 - [ ] Tras correr: nº trades, días SIN OPERAR (sesgo=0), neto, max DD, Profit Factor → tabla aquí
