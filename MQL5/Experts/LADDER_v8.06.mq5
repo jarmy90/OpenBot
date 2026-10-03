@@ -129,10 +129,10 @@ int TesterOffsetTable(datetime srv)
    int dOct=31;while(dOct>24&&DowOf(y,10,dOct)!=0)dOct--;
    int secondSunMar=1+((7-DowOf(y,3,1))%7)+7;
    int firstSunNov=1+((7-DowOf(y,11,1))%7);
-   datetime usA=StructToTime(IntegerToString(y)+".03."+IntegerToString(secondSunMar)+" 00:00");
-   datetime usB=StructToTime(IntegerToString(y)+".11."+IntegerToString(firstSunNov)+" 00:00");
-   datetime euA=StructToTime(IntegerToString(y)+".03."+IntegerToString(dMar)+" 00:00");
-   datetime euB=StructToTime(IntegerToString(y)+".10."+IntegerToString(dOct)+" 00:00");
+   datetime usA=StringToTime(IntegerToString(y)+".03."+IntegerToString(secondSunMar)+" 00:00");
+   datetime usB=StringToTime(IntegerToString(y)+".11."+IntegerToString(firstSunNov)+" 00:00");
+   datetime euA=StringToTime(IntegerToString(y)+".03."+IntegerToString(dMar)+" 00:00");
+   datetime euB=StringToTime(IntegerToString(y)+".10."+IntegerToString(dOct)+" 00:00");
    bool us=(srv>=usA&&srv<usB);
    bool eu=(srv>=euA&&srv<euB);
    if(us&&!eu)return 6;
